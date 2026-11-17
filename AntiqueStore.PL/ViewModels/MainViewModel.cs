@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using AntiqueStore.BLL;
 using AntiqueStore.Models;
@@ -11,19 +12,6 @@ namespace AntiqueStore.PL.ViewModels
         private ObservableCollection<Antique> _items;
         private Antique _selectedItem;
         private string _searchText;
-        private int _selectedTypeIndex;
-
-        public string InputName { get; set; } = string.Empty;
-        public int InputYear { get; set; } = 2000;
-        public decimal InputPrice { get; set; }
-        public string InputArtist { get; set; } = string.Empty;
-        public string InputCountry { get; set; } = string.Empty;
-
-        public int SelectedTypeIndex
-        {
-            get => _selectedTypeIndex;
-            set => SetProperty(ref _selectedTypeIndex, value);
-        }
 
         public ObservableCollection<Antique> Items
         {
@@ -34,10 +22,7 @@ namespace AntiqueStore.PL.ViewModels
         public Antique SelectedItem
         {
             get => _selectedItem;
-            set
-            {
-                SetProperty(ref _selectedItem, value);
-            }
+            set => SetProperty(ref _selectedItem, value);
         }
 
         public string SearchText
@@ -58,7 +43,7 @@ namespace AntiqueStore.PL.ViewModels
         {
             _service = service;
             _items = new ObservableCollection<Antique>();
-            _selectedTypeIndex = 0;
+            _searchText = string.Empty;
 
             AddCommand = new RelayCommand(AddItem);
             DeleteCommand = new RelayCommand(DeleteItem);
@@ -80,37 +65,19 @@ namespace AntiqueStore.PL.ViewModels
             OnPropertyChanged(nameof(TotalCount));
         }
 
+        // Открытие второго окна + ПЕРЕДАЧА ДАННЫХ между формами
         private void AddItem(object parameter)
         {
-            if (SelectedTypeIndex == 0)
-            {
-                var item = new Painting
-                {
-                    Name = InputName,
-                    Year = InputYear,
-                    Price = InputPrice,
-                    Artist = InputArtist,
-                    Technique = "Масло",
-                    Description = "Картина: " + InputName
-                };
-                _service.Add(item);
-            }
-            else
-            {
-                var item = new Coin
-                {
-                    Name = InputName,
-                    Year = InputYear,
-                    Price = InputPrice,
-                    Country = InputCountry,
-                    Metal = "Серебро",
-                    Description = "Монета: " + InputName
-                };
-                _service.Add(item);
-            }
+            AddItemWindow addWindow = new AddItemWindow();
+            addWindow.Owner = Application.Current.MainWindow;
 
-            LoadItems();
-            ClearFields();
+            bool? result = addWindow.ShowDialog();
+
+            if (result == true && addWindow.CreatedItem != null)
+            {
+                _service.Add(addWindow.CreatedItem);
+                LoadItems();
+            }
         }
 
         private void DeleteItem(object parameter)
@@ -127,20 +94,6 @@ namespace AntiqueStore.PL.ViewModels
             Items.Clear();
             foreach (var item in _service.SearchByName(SearchText))
                 Items.Add(item);
-        }
-
-        private void ClearFields()
-        {
-            InputName = string.Empty;
-            InputYear = 2000;
-            InputPrice = 0;
-            InputArtist = string.Empty;
-            InputCountry = string.Empty;
-            OnPropertyChanged(nameof(InputName));
-            OnPropertyChanged(nameof(InputYear));
-            OnPropertyChanged(nameof(InputPrice));
-            OnPropertyChanged(nameof(InputArtist));
-            OnPropertyChanged(nameof(InputCountry));
         }
     }
 }

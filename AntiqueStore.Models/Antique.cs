@@ -9,5 +9,7 @@
         public string Description { get; set; } = string.Empty;
 
         public abstract string GetFullInfo();
+
+        public string FullInfo => GetFullInfo();
     }
 }
