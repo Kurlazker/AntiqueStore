@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AntiqueStore.BLL/AntiqueStore.BLL.csproj" Id="d4ecbe45-0352-4107-b12d-81627d3cf2be" />
+  <Project Path="AntiqueStore.DAL/AntiqueStore.DAL.csproj" Id="8747b40f-3579-4782-8d51-c3440873e2f3" />
+  <Project Path="AntiqueStore.Models/AntiqueStore.Models.csproj" Id="8b18e518-6212-4da2-833f-9a1a0e5b02b8" />
+  <Project Path="AntiqueStore.PL/AntiqueStore.PL.csproj" Id="74ea6fbb-8c58-44a8-aec4-8b4938930e33" />
+</Solution>

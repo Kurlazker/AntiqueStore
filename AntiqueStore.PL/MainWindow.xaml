@@ -1,0 +1,106 @@
+﻿<Window x:Class="AntiqueStore.PL.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Интернет-магазин антиквара" 
+        Height="650" Width="950"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Добавление антиквариата -->
+        <GroupBox Header="Добавить антиквариат" Grid.Row="0" Margin="5" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Тип -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Тип:" VerticalAlignment="Center" Margin="5"/>
+                <ComboBox Grid.Row="0" Grid.Column="1" SelectedIndex="{Binding SelectedTypeIndex}" Margin="5">
+                    <ComboBoxItem Content="Картина"/>
+                    <ComboBoxItem Content="Монета"/>
+                </ComboBox>
+
+                <!-- Название -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Название:" VerticalAlignment="Center" Margin="5"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputName, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+                <!-- Год -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Год:" VerticalAlignment="Center" Margin="5"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InputYear, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+                <!-- Цена -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Цена (руб.):" VerticalAlignment="Center" Margin="5"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding InputPrice, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+                <!-- Художник (для картины) -->
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Художник:" VerticalAlignment="Center" Margin="5"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding InputArtist, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+                <!-- Страна (для монеты) -->
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Страна:" VerticalAlignment="Center" Margin="5"/>
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding InputCountry, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+            <Button Content="Добавить" Command="{Binding AddCommand}" Background="LightGreen" Width="120" Height="30"/>
+            <Button Content="Удалить" Command="{Binding DeleteCommand}" Background="LightCoral" Width="120" Height="30" Margin="10,0"/>
+            <Button Content="Обновить" Command="{Binding RefreshCommand}" Background="LightBlue" Width="120" Height="30"/>
+        </StackPanel>
+
+        <!-- Поиск -->
+        <GroupBox Header="Поиск по названию" Grid.Row="2" Margin="5" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                <Button Grid.Column="1" Content="Найти" Command="{Binding SearchCommand}" Margin="5" Width="100"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Таблица -->
+        <DataGrid Grid.Row="3" ItemsSource="{Binding Items}" 
+                  SelectedItem="{Binding SelectedItem}"
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  Margin="5"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="150"/>
+                <DataGridTextColumn Header="Год" Binding="{Binding Year}" Width="70"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat={}{0:N0} руб.}" Width="100"/>
+                <DataGridTextColumn Header="Информация" Binding="{Binding GetFullInfo}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Статус -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <TextBlock Text="Записей: " FontWeight="Bold"/>
+            <TextBlock Text="{Binding TotalCount}" Margin="0,0,20,0" Foreground="DarkBlue"/>
+            <TextBlock Text="Общая стоимость: " FontWeight="Bold"/>
+            <TextBlock Text="{Binding TotalValue, StringFormat={}{0:N0} руб.}" 
+                       Foreground="DarkGreen" FontWeight="Bold" FontSize="14"/>
+        </StackPanel>
+    </Grid>
+</Window>
