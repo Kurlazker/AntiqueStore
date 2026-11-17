@@ -35,9 +35,9 @@ namespace AntiqueStore.PL.ViewModels
         public int TotalCount { get; private set; }
 
         public ICommand AddCommand { get; }
+        public ICommand EditCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand SearchCommand { get; }
-        public ICommand RefreshCommand { get; }
 
         public MainViewModel(IInventoryService service)
         {
@@ -46,9 +46,9 @@ namespace AntiqueStore.PL.ViewModels
             _searchText = string.Empty;
 
             AddCommand = new RelayCommand(AddItem);
+            EditCommand = new RelayCommand(EditItem);
             DeleteCommand = new RelayCommand(DeleteItem);
             SearchCommand = new RelayCommand(SearchItems);
-            RefreshCommand = new RelayCommand((obj) => LoadItems());
 
             LoadItems();
         }
@@ -65,7 +65,7 @@ namespace AntiqueStore.PL.ViewModels
             OnPropertyChanged(nameof(TotalCount));
         }
 
-        // Открытие второго окна + ПЕРЕДАЧА ДАННЫХ между формами
+        // Открытие второго окна для добавления + ПЕРЕДАЧА ДАННЫХ
         private void AddItem(object parameter)
         {
             AddItemWindow addWindow = new AddItemWindow();
@@ -76,6 +76,28 @@ namespace AntiqueStore.PL.ViewModels
             if (result == true && addWindow.CreatedItem != null)
             {
                 _service.Add(addWindow.CreatedItem);
+                LoadItems();
+            }
+        }
+
+        // Открытие третьего окна для редактирования + ПЕРЕДАЧА ДАННЫХ
+        private void EditItem(object parameter)
+        {
+            if (SelectedItem == null)
+            {
+                MessageBox.Show("Сначала выберите запись в таблице для редактирования.",
+                    "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            EditItemWindow editWindow = new EditItemWindow(SelectedItem);
+            editWindow.Owner = Application.Current.MainWindow;
+
+            bool? result = editWindow.ShowDialog();
+
+            if (result == true && editWindow.EditedItem != null)
+            {
+                _service.Update(editWindow.EditedItem);
                 LoadItems();
             }
         }

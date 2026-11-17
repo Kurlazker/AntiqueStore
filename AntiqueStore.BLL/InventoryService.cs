@@ -22,6 +22,16 @@ namespace AntiqueStore.BLL
             return _items.ToList();
         }
 
+        // Алгоритм: Обновить существующую запись по ID
+        public void Update(Antique item)
+        {
+            int index = _items.FindIndex(x => x.Id == item.Id);
+            if (index != -1)
+            {
+                _items[index] = item;
+                _repository.SaveAll(_items);
+            }
+        }
         // Алгоритм 2: Добавить новую запись с автогенерацией ID
         public void Add(Antique item)
         {

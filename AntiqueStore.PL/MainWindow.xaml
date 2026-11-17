@@ -21,9 +21,8 @@
             <Button Content="Удалить выбранное" 
                     Command="{Binding DeleteCommand}"
                     Background="LightCoral" Width="160" Height="35" Margin="5"/>
-            <Button Content="Обновить" 
-                    Command="{Binding RefreshCommand}"
-                    Background="LightBlue" Width="120" Height="35" Margin="5"/>
+            <Button Content="Изменить выбранное" Command="{Binding EditCommand}"
+        Background="LightYellow" Width="180" Height="35" Margin="10,0"/>
         </WrapPanel>
 
         <!-- Поиск по названию -->
